@@ -1,8 +1,22 @@
-import { Checkbox, styled } from '@mui/material';
+import { StyledComponent } from '@emotion/styled';
+import { MUIStyledCommonProps, Theme } from '@mui/system';
+import {
+  Checkbox,
+  styled,
+  CheckboxProps,
+} from '@mui/material';
 
-const LargeCheckBox = styled(Checkbox)({
-    height: 40,
-    width: 40,
-});
+const CustomSizeCheckbox = styled(Checkbox, {
+    shouldForwardProp: (propName) => propName !== 'size',
+})(({ size = 35 }) => ({
+    svg: {
+      height: size,
+      width: size,
+    },
+  })) as StyledComponent<
+    Omit<CheckboxProps, 'size'> & MUIStyledCommonProps<Theme>,
+    { size?: number },
+    {}
+  >;
 
-export default LargeCheckBox;
+  export default CustomSizeCheckbox;

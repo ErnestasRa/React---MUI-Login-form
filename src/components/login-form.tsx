@@ -6,14 +6,14 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React from 'react';
 import SecurityIcon from '@mui/icons-material/Security';
-import LargeCheckBox from './custom-size-checkbox';
+import CustomSizeCheckbox from './custom-size-checkbox';
 
 const LoginForm = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [checked, setChecked] = useState(false);
+    const [username, setUsername] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [checked, setChecked] = React.useState(false);
 
     const handleChange = () => {
         setChecked(!checked);
@@ -46,12 +46,12 @@ const LoginForm = () => {
           />
           <TextField
             variant="filled"
-            label="Password: "
             value={password}
             onChange={((e) => setPassword(e.target.value))}
+            label="Password: "
           />
           <FormControlLabel
-            control={(<LargeCheckBox checked={checked} onChange={handleChange} />)}
+            control={(<CustomSizeCheckbox checked={checked} onChange={handleChange} />)}
             label="Isiminti"
           />
 
