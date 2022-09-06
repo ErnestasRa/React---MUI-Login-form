@@ -35,6 +35,7 @@ const LoginForm = () => {
             height: '100vh',
             display: 'grid',
             placeItems: 'center',
+            backgroundColor: 'lightgreen',
            }}
       >
         <Paper
