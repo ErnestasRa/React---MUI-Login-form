@@ -9,14 +9,9 @@ import {
 import React from 'react';
 import SecurityIcon from '@mui/icons-material/Security';
 
-type Topic = {
-  id: string,
-  title: string,
-};
-
 const topics: Topic[] = [
   { id: '1', title: 'HTML' },
-  { id: '2', title: 'HTML' },
+  { id: '2', title: 'CSS' },
   { id: '3', title: 'JS' },
   { id: '4', title: 'DOM' },
   { id: '5', title: 'Typescript' },
@@ -30,7 +25,7 @@ const topics: Topic[] = [
 ];
 
 const RegisterForm = () => {
-    const [username, setUsername] = React.useState('');
+    const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [selectedTopics, setSelectedTopics] = React.useState<Topic[]>([]);
 
@@ -38,7 +33,7 @@ const RegisterForm = () => {
         e.preventDefault();
         console.log('Siunciami duomenys');
         console.log({
-            username,
+             email,
             password,
         });
     };
@@ -68,8 +63,8 @@ const RegisterForm = () => {
           <TextField
             type="email"
             variant="filled"
-            value={username}
-            onChange={((e) => setUsername(e.target.value))}
+            value={email}
+            onChange={((e) => setEmail(e.target.value))}
             label="Email: "
           />
           <TextField
