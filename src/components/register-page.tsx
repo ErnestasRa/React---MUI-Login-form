@@ -105,6 +105,7 @@ const RegisterForm = () => {
             ]}
             onChange={(event, selectedOptions) => console.log({
               selectedOptions,
+              event,
             })}
           />
           <Button

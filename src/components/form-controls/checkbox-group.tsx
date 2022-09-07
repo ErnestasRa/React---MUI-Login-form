@@ -1,11 +1,11 @@
+import React from 'react';
 import {
   Box,
-  Checkbox,
   FormControlLabel,
-  FormGroup,
+  Checkbox,
   FormLabel,
+  FormGroup,
 } from '@mui/material';
-import * as React from 'react';
 
 type CheckboxOption = {
   value: string,
@@ -17,12 +17,12 @@ type CheckboxGroupProps = {
   name: string,
   options: CheckboxOption[],
   value?: CheckboxOption[],
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>, value:CheckboxOption[]) => void
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>, value: CheckboxOption[]) => void,
 };
 
-type MutatedOptions = (currentValue: CheckboxOption[], checkboxValue: string) => CheckboxOption[];
+type MutateOptions = (value: CheckboxOption[], option: CheckboxOption) => CheckboxOption[];
 
-const CheckboxGroup:React.FC<CheckboxGroupProps> = ({
+const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   label,
   name,
   options,
@@ -31,58 +31,50 @@ const CheckboxGroup:React.FC<CheckboxGroupProps> = ({
 }) => {
   const selectedValues = value && value.map((x) => x.value);
 
-  const createAppendedValue: MutatedOptions = (currentValue, checkboxValue) => {
-    const copy = [...currentValue];
-    const newOption = options.find((x) => x.value === checkboxValue);
-    if (newOption === undefined) {
-      throw new Error('selected checkbox is not found in Options ');
-    } else {
-      copy.push(newOption);
-    }
-    return copy;
-  };
+  const createAppendedValue: MutateOptions = (currentValue, option) => [...currentValue, option];
 
-  const createReducedValue: MutatedOptions = (currentValue, checkboxValue) => currentValue
-  .filter((x) => x.value !== checkboxValue);
+  const createReducedValue: MutateOptions = (currentValue, option) => currentValue
+    .filter((x) => x.value !== option.value);
 
-  const handleRadioChange = (
+  const handleCheckboxChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean,
-    checkboxValue: string,
-) => {
+    option: CheckboxOption,
+  ) => {
     const componentIsControlled = value && onChange;
 
     if (componentIsControlled) {
       const newValue: CheckboxOption[] = checked
-       ? createAppendedValue(value, checkboxValue)
-       : createReducedValue(value, checkboxValue);
+        ? createAppendedValue(value, option)
+        : createReducedValue(value, option);
 
       onChange(event, newValue);
     } else {
-      // component uncontrolled
+      // Komponentas nekontroliuojamas
+
     }
   };
 
- return (
-   <Box>
-     <FormLabel sx={{ letterSpacing: '0.05em', mb: 1 }}>{label}</FormLabel>
-     <FormGroup sx={{ display: 'flex', flexDirection: 'column', px: 2 }}>
-       {options.map((option) => (
-         <FormControlLabel
-           key={option.value}
-           control={(
-             <Checkbox
-               value={option.value}
-               name={name}
-               onChange={(event, newChecked) => handleRadioChange(event, newChecked, option.value)}
-               checked={selectedValues?.includes(option.value)}
-             />
-        )}
-           label={option.label}
-         />
-          ))}
-     </FormGroup>
-   </Box>
+  return (
+    <Box>
+      <FormLabel sx={{ letterSpacing: '0.04em', mb: 1 }}>{label}</FormLabel>
+      <FormGroup sx={{ display: 'flex', flexDirection: 'column', px: 2 }}>
+        {options.map((option) => (
+          <FormControlLabel
+            key={option.value}
+            control={(
+              <Checkbox
+                value={option.value}
+                name={name}
+                onChange={(e, newChecked) => handleCheckboxChange(e, newChecked, option)}
+                checked={selectedValues?.includes(option.value)}
+              />
+            )}
+            label={option.label}
+          />
+        ))}
+      </FormGroup>
+    </Box>
   );
 };
 
