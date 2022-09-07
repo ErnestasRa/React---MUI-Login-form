@@ -99,7 +99,13 @@ const RegisterForm = () => {
               { value: '3', label: 'quiz' },
               { value: '4', label: 'exercises' },
             ]}
-
+            value={[
+              { value: '1', label: 'posts' },
+              { value: '2', label: 'video' },
+            ]}
+            onChange={(event, selectedOptions) => console.log({
+              selectedOptions,
+            })}
           />
           <Button
             type="submit"
