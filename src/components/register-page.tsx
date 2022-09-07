@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import SecurityIcon from '@mui/icons-material/Security';
+import CheckboxGroup from './form-controls/checkbox-group';
 
 const topics: Topic[] = [
   { id: '1', title: 'HTML' },
@@ -89,7 +90,17 @@ const RegisterForm = () => {
             )}
 
           />
+          <CheckboxGroup
+            label="Dominantys informacijos tipai"
+            name="interest-types"
+            options={[
+              { value: '1', label: 'posts' },
+              { value: '2', label: 'video' },
+              { value: '3', label: 'quiz' },
+              { value: '4', label: 'exercises' },
+            ]}
 
+          />
           <Button
             type="submit"
             variant="contained"
