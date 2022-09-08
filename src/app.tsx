@@ -3,12 +3,12 @@ import {
   Typography,
   Container,
 } from '@mui/material';
-import RegisterForm from './components/register-page';
+import TestPage from './components/pages/test-page';
 
 const App: React.FC = () => (
   <Container>
     <Typography variant="h2" component="h1" align="center">Tai yra mano aplikacija</Typography>
-    <RegisterForm />
+    <TestPage />
   </Container>
 );
 
