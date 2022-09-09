@@ -4,40 +4,34 @@ import {
   Typography,
   Slider,
 } from '@mui/material';
-import { RangeInput, InputContainer } from './components';
+import { RangeInput, InputContainer, RangeInputProps } from './components';
 
 type RangeFieldProps = {
   min?: number,
   max?: number
 };
 
-type RangeInputChangeHandler = React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+type RangeInputChangeHandler = RangeInputProps['onChange'];
 
 const RangeField: React.FC<RangeFieldProps> = ({
   min = 0,
   max = 100,
 }) => {
   const [privateValue, setPrivateValue] = React.useState<[number, number]>([min, max]);
-
   const [privateMinValue, privateMaxValue] = privateValue;
+  const valueInRange = (newValue: number) => newValue <= max && newValue >= min;
 
-  const handleMinValueChange: RangeInputChangeHandler = (e) => {
+  const handleMinValueChange: RangeInputChangeHandler = (e, newMinValue) => {
     // TODO: nustatyti reikšmę tik tuomet, jeigu ji nėra mažesnė už props'ą - min
-    if (Number(e.target.value) >= min) {
-      setPrivateValue([
-        Number(e.target.value),
-        privateMaxValue,
-      ]);
-    } else throw new Error('stoopid');
+    if (valueInRange(newMinValue)) {
+      setPrivateValue([newMinValue, privateMaxValue]);
+    }
   };
 
-  const handleMaxValueChange: RangeInputChangeHandler = (e) => {
+  const handleMaxValueChange: RangeInputChangeHandler = (e, newMaxValue) => {
     // TODO: nustatyti reikšmę tik tuomet, jeigu ji nėra didesnė už props'ą - max
-    if (Number(e.target.value) <= max) {
-    setPrivateValue([
-        privateMinValue,
-        Number(e.target.value),
-      ]);
+    if (valueInRange(newMaxValue)) {
+      setPrivateValue([newMaxValue, privateMinValue]);
     }
   };
 
@@ -45,11 +39,13 @@ const RangeField: React.FC<RangeFieldProps> = ({
     <Box sx={{ width: 300 }}>
       <InputContainer>
         <RangeInput
+          newValueIsvalid={valueInRange}
           value={privateMinValue}
           onChange={handleMinValueChange}
         />
         <Typography>iki</Typography>
         <RangeInput
+          newValueIsvalid={valueInRange}
           value={privateMaxValue}
           onChange={handleMaxValueChange}
         />

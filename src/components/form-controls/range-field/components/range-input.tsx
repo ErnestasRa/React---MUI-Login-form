@@ -5,19 +5,31 @@ import {
   FilledInputProps,
 } from '@mui/material';
 
-type RangeInputProps = Omit<FilledInputProps, 'size' | 'type' | 'onChange' | 'multiline' | 'value'> & {
+export type RangeInputProps = Omit<FilledInputProps, 'size' | 'type' | 'onChange' | 'multiline' | 'value'> & {
   value: number,
   onChange: (e: React.ChangeEvent<HTMLInputElement>, val: number) => void,
+  newValueIsvalid: (newVal:number) => boolean
 };
 
 // TODO: Kviesti onChange prop'są tik tuomet, kai įvyksta eventas "onBlur"
 const RangeInput: React.FC<RangeInputProps> = ({
   onChange,
   value,
+  newValueIsvalid,
   sx = [],
   ...props
 }) => {
   const [privateValue, setPrivateValue] = React.useState(value);
+
+  const handleBlur:React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement > = (e) => {
+    const newValue = Number(e.target.value);
+    const newValueIsValid = newValueIsvalid(newValue);
+    if (newValueIsValid) {
+       onChange(e as React.FocusEvent<HTMLInputElement>, Number(e.target.value));
+      } else {
+        setPrivateValue(value);
+      }
+  };
 
   React.useEffect(() => setPrivateValue(value), [value]);
 
@@ -38,7 +50,7 @@ const RangeInput: React.FC<RangeInputProps> = ({
     ]}
      value={privateValue}
      onChange={(e) => setPrivateValue(Number(e.target.value))}
-     onBlur={(e) => onChange(e as React.FocusEvent<HTMLInputElement>, Number(e.target.value))}
+     onBlur={handleBlur}
      {...props}
    />
 );
