@@ -11,27 +11,30 @@ type RangeFieldProps = {
   max?: number
 };
 
-type RangeInputChangeHandler = RangeInputProps['onChange'];
+type Range = [number, number];
+
+const orderByRange = (range: Range) => range.sort((a, b) => a - b) as Range;
 
 const RangeField: React.FC<RangeFieldProps> = ({
   min = 0,
   max = 100,
 }) => {
-  const [privateValue, setPrivateValue] = React.useState<[number, number]>([min, max]);
+  const [privateValue, setPrivateValue] = React.useState<Range>([min, max]);
   const [privateMinValue, privateMaxValue] = privateValue;
+
   const valueInRange = (newValue: number) => newValue <= max && newValue >= min;
 
-  const handleMinValueChange: RangeInputChangeHandler = (e, newMinValue) => {
+  const handleMinValueChange: RangeInputProps['onChange'] = (e, newMinValue) => {
     // TODO: nustatyti reikšmę tik tuomet, jeigu ji nėra mažesnė už props'ą - min
     if (valueInRange(newMinValue)) {
-      setPrivateValue([newMinValue, privateMaxValue]);
+      setPrivateValue(orderByRange([newMinValue, privateMaxValue]));
     }
   };
 
-  const handleMaxValueChange: RangeInputChangeHandler = (e, newMaxValue) => {
+  const handleMaxValueChange: RangeInputProps['onChange'] = (e, newMaxValue) => {
     // TODO: nustatyti reikšmę tik tuomet, jeigu ji nėra didesnė už props'ą - max
     if (valueInRange(newMaxValue)) {
-      setPrivateValue([newMaxValue, privateMinValue]);
+      setPrivateValue(orderByRange([newMaxValue, privateMinValue]));
     }
   };
 
