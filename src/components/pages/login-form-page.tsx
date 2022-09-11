@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import SecurityIcon from '@mui/icons-material/Security';
-import CustomSizeCheckbox from '../form-controls/custom-size-checkbox';
+import CustomSizeCheckbox from '../form-controls/checkbox/custom-size-checkbox';
 
 const LoginForm = () => {
     const [username, setUsername] = React.useState('');

@@ -1,10 +1,10 @@
 import { Container } from '@mui/material';
 import React from 'react';
-import RangeField from '../form-controls/range-field';
+import EmailInput from '../form-controls/email-input';
 
 const TestPage: React.FC = () => (
   <Container sx={{ mt: 6 }}>
-    <RangeField />
+    <EmailInput />
   </Container>
   );
 
