@@ -6,55 +6,87 @@ import {
 } from '@mui/material';
 import { RangeInput, InputContainer, RangeInputProps } from './components';
 
-type RangeFieldProps = {
-  min?: number,
-  max?: number
-};
-
 type Range = [number, number];
 
-const orderByRange = (range: Range) => range.sort((a, b) => a - b) as Range;
+type RangeFieldProps = {
+  min?: number,
+  max?: number,
+  value?: Range
+};
+
+const orderRangeASC = (range: Range) => range.sort((x, y) => x - y) as Range;
+
+const DEFAULT_MIN = 0;
+const DEFAULT_MAX = 100;
+const DEFAULT_RANGE: Range = [DEFAULT_MIN, DEFAULT_MAX];
 
 const RangeField: React.FC<RangeFieldProps> = ({
-  min = 0,
-  max = 100,
+  min,
+  max,
+  value = DEFAULT_RANGE,
 }) => {
-  const [privateValue, setPrivateValue] = React.useState<Range>([min, max]);
-  const [privateMinValue, privateMaxValue] = privateValue;
+  const [bounds, setBounds] = React.useState<Range>(DEFAULT_RANGE);
+  const [privateValue, setPrivateValue] = React.useState<Range>(DEFAULT_RANGE);
 
-  const valueInRange = (newValue: number) => newValue <= max && newValue >= min;
+  const [privateMin, privateMax] = privateValue;
+  const [lowerBound, higherBound] = bounds;
 
-  const handleMinValueChange: RangeInputProps['onChange'] = (e, newMinValue) => {
-    // TODO: nustatyti reikšmę tik tuomet, jeigu ji nėra mažesnė už props'ą - min
-    if (valueInRange(newMinValue)) {
-      setPrivateValue(orderByRange([newMinValue, privateMaxValue]));
-    }
+  const valueInRange = (newValue: number) => newValue <= higherBound && newValue >= lowerBound;
+
+  const handleMinValueChange: RangeInputProps['onChange'] = (e, newMin) => {
+    setPrivateValue(orderRangeASC([newMin, privateMax]));
   };
 
-  const handleMaxValueChange: RangeInputProps['onChange'] = (e, newMaxValue) => {
-    // TODO: nustatyti reikšmę tik tuomet, jeigu ji nėra didesnė už props'ą - max
-    if (valueInRange(newMaxValue)) {
-      setPrivateValue(orderByRange([newMaxValue, privateMinValue]));
-    }
+  const handleMaxValueChange: RangeInputProps['onChange'] = (e, newMax) => {
+    setPrivateValue(orderRangeASC([privateMin, newMax]));
   };
+
+  const calcInitBounds = (): Range => {
+    const [minVal, maxVal] = orderRangeASC(value);
+
+    const initMinBound = min || minVal;
+    const initMaxBound = max || maxVal;
+
+    return [initMinBound, initMaxBound];
+  };
+
+  const calcInitPrivateValue = (initBounds: Range): Range => {
+    const [minVal, maxVal] = orderRangeASC(value);
+
+    return value ? [minVal, maxVal] : initBounds;
+  };
+
+  React.useEffect(() => {
+    const initBounds = calcInitBounds();
+    const initPrivateValue = calcInitPrivateValue(initBounds);
+
+    setBounds(initBounds);
+    setPrivateValue(initPrivateValue);
+  }, []);
 
   return (
     <Box sx={{ width: 300 }}>
       <InputContainer>
         <RangeInput
-          newValueIsvalid={valueInRange}
-          value={privateMinValue}
+          value={privateMin}
           onChange={handleMinValueChange}
+          newValueIsvalid={valueInRange}
         />
         <Typography>iki</Typography>
         <RangeInput
-          newValueIsvalid={valueInRange}
-          value={privateMaxValue}
+          value={privateMax}
           onChange={handleMaxValueChange}
+          newValueIsvalid={valueInRange}
         />
       </InputContainer>
       <Box sx={{ mx: 3 }}>
-        <Slider value={privateValue} min={min} max={max} />
+        <Slider
+          value={privateValue}
+          min={lowerBound}
+          max={higherBound}
+          onChange={(_, newValue) => setPrivateValue(newValue as Range)}
+          onChangeCommitted={(_, newValue) => { console.log('onChangeCommitted', { newValue }); }}
+        />
       </Box>
     </Box>
   );

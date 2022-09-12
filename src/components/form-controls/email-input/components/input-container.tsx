@@ -3,7 +3,7 @@ import {
     styled,
   } from '@mui/material';
 
-  const EmailContainer = styled(Box)(({ theme }) => ({
+  const FormContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(4),
     alignItems: 'center',
@@ -11,4 +11,4 @@ import {
     flexDirection: 'column',
   }));
 
-  export default EmailContainer;
+  export default FormContainer;

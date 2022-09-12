@@ -7,8 +7,11 @@ import {
     FormControl,
 } from '@mui/material';
 
-import EmailContainer from './components/input-container';
+import FormContainer from './components/input-container';
+import PasswordValidator from './validators/password-validator';
 import EmailValidator from './validators/email-validator';
+
+type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
 
 const EmailInput: React.FC = () => {
 const [form, setForm] = React.useState({
@@ -16,7 +19,7 @@ const [form, setForm] = React.useState({
     Password: '',
 });
 
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleChange = (e:ChangeEvent) => {
     const nextFormState = {
         ...form,
         [e.target.name]: e.target.value,
@@ -25,44 +28,47 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 };
 
 const handleSubmit = () => {
-    if (form.Email === '' || form.Password === '') {
-        throw new Error('cannot be empty');
-    } else {
-        console.log('tinka');
+    if (!EmailValidator(form.Email) || !PasswordValidator(form.Password)) {
+      console.log('no');
     }
 };
 
     return (
-      <FormControl>
-        <EmailContainer>
-          <TextField
-            name="Email"
-            id="filled-basic"
-            label="Email"
-            variant="filled"
-            required
-            value={form.Email}
-            onChange={handleChange}
-          />
-          <TextField
-            name="Password"
-            id="filled-basic"
-            label="Password"
-            variant="filled"
-            required
-            value={form.Password}
-            onChange={handleChange}
-          />
-          <Box>
-            <Button
-              onClick={handleSubmit}
-            >
-              Submit
+      <form>
+        <FormControl>
+          <FormContainer sx={{ display: 'flex', alignItems: 'center' }}>
+            <TextField
+              name="Email"
+              id="filled-basic"
+              label="Email"
+              variant="filled"
+              required
+              value={form.Email}
+              onChange={handleChange}
 
-            </Button>
-          </Box>
-        </EmailContainer>
-      </FormControl>
+            />
+            <TextField
+              name="Password"
+              id="filled-basic"
+              label="Password"
+              variant="filled"
+              required
+              value={form.Password}
+              onChange={handleChange}
+              error={form.Password.length < 8}
+              type="password"
+            />
+            <Box>
+              <Button
+                onClick={handleSubmit}
+              >
+                Submit
+
+              </Button>
+            </Box>
+          </FormContainer>
+        </FormControl>
+      </form>
 
   );
 };
